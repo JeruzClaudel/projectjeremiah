@@ -1,48 +1,45 @@
-# Use official PHP image with common extensions
 FROM php:8.2-fpm
 
-# Install system dependencies
+# System dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    npm
+    git unzip curl libpng-dev libonig-dev libxml2-dev \
+    libsqlite3-dev zip sqlite3 && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# PHP extensions — pdo_sqlite instead of pdo_mysql
+RUN docker-php-ext-install pdo pdo_sqlite mbstring exif pcntl bcmath gd
 
-# Install Composer
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Install Node.js (for Vite or Mix)
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
+# Node.js 20
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
 
-# Set working directory
 WORKDIR /var/www
 
-# Copy project files
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# PHP dependencies (no dev)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Install Node dependencies & build
-RUN npm install && npm run build
+# Frontend assets
+RUN npm ci && npm run build
 
-# Copy example environment file & generate app key (optional)
-# RUN cp .env.example .env && php artisan key:generate
+# Storage permissions
+RUN chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
 
-# Clear and cache configurations
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
+# SQLite database directory outside webroot
+RUN mkdir -p /data && touch /data/database.sqlite && \
+    chown -R www-data:www-data /data
 
-# Create storage link
-RUN php artisan storage:link
+# Expect .env to be injected as environment variables at runtime
+# Run migrations + cache at start via entrypoint
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose port
-EXPOSE 80
-CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
+EXPOSE 8080
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
