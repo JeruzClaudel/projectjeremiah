@@ -1,5 +1,4 @@
-@vite('resources/css/style1.css')
-<x-app-layout>
+<x-app-layout title="Edit Quote">
         <div class="top-bar">
             <a class="top-button back" href="{{ route('admin.quote.index') }}">&larr; BACK</a>
             <h2 class="navigation-title">Quote - Add</h2>

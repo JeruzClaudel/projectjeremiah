@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
-
-use App\Models\User\Hotline;
-
 use App\Http\Controllers\Controller;
+use App\Models\User\Hotline;
+use App\Models\SupportResource;
 
 class HotlineController extends Controller
 {
     public function index()
     {
-        $hotlines = Hotline::all();
+        $hotlines  = Hotline::all();
+        $resources = SupportResource::latest()->get();
 
-        $page_data = ['entries' => $hotlines];
+        return view('user.hotlines.hotlines', [
+            'entries'   => $hotlines,
+            'resources' => $resources,
+        ]);
+    }
 
-        return view('user/hotlines/hotlines', $page_data);
+    public function show($id)
+    {
+        $hotline = Hotline::findOrFail($id);
+        return view('user.hotlines.hotline_details', compact('hotline'));
     }
 }

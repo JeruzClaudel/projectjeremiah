@@ -1,6 +1,4 @@
-@vite('resources/css/style1.css')
-@vite('resources/js/message.js')
-<x-app-layout>
+<x-app-layout title="Consultation">
     <div class="top-bar">
         <h2 class="navigation-title">Manage Consultation Links</h2>
         <a class="top-button add" href="{{ route('admin.consultation.add')}}">&#65291 ADD CONSULTATION LINKS</a>

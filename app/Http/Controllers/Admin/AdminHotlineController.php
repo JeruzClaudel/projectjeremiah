@@ -37,11 +37,11 @@ class AdminHotlineController extends Controller
 
     public function store(Request $request) {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'phone_number' => 'required|string|max:10000',
-            'email' => 'required|string|max:10000',
-            'availability' => 'required|string|max:10000',
-            'site_link' => 'nullable|string|max:10000',
+            'name'         => 'required|string|max:100',
+            'phone_number' => 'required|string|max:30',
+            'email'        => 'required|email|max:255',
+            'availability' => 'required|string|max:255',
+            'site_link'    => 'nullable|url|max:2048',
         ]);
 
         $hotline = Hotline::create($validated);
@@ -53,11 +53,11 @@ class AdminHotlineController extends Controller
 
     public function update(Request $request, Hotline $id) {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'phone_number' => 'required|string|max:10000',
-            'email' => 'required|string|max:10000',
-            'availability' => 'required|string|max:10000',
-            'site_link' => 'nullable|string|max:10000',
+            'name'         => 'required|string|max:100',
+            'phone_number' => 'required|string|max:30',
+            'email'        => 'required|email|max:255',
+            'availability' => 'required|string|max:255',
+            'site_link'    => 'nullable|url|max:2048',
         ]);
 
         $id->name = $validated['name'];

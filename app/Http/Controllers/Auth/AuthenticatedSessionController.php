@@ -27,15 +27,21 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        
-        if(Auth::user()->roles == 'user') {
+
+        if (Auth::user()->roles === 'admin') {
+            return redirect()->intended(route('admin.dashboard', absolute: false));
+        }
+
+        if (Auth::user()->roles === 'user') {
             return redirect()->intended(route('home', absolute: false));
         }
 
-        if(Auth::user()->roles == 'admin') {
-            return redirect()->intended(route('admin.dashboard', absolute: false));
-        }
-        
+        // Fallback for any unrecognised role — log out and show an error
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login')
+            ->withErrors(['email' => 'Your account does not have the required permissions.']);
     }
 
     /**

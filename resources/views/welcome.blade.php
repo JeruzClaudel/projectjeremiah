@@ -1,151 +1,124 @@
 @extends('layouts.user')
-
-@section('styles')
-    @vite('resources/css/styles.css')
-@endsection
+@section('title', 'Home — Project Jeremiah 33:3')
 
 @section('content')
 
-<!-- Floating decorative shapes -->
-<div class="floating-shapes">
-    <div class="shape">
-        <i class="fas fa-graduation-cap fa-3x" style="color: rgba(240,196,25,0.1);"></i>
-    </div>
-    <div class="shape">
-        <i class="fas fa-heart fa-2x" style="color: rgba(240,196,25,0.1);"></i>
-    </div>
-    <div class="shape">
-        <i class="fas fa-lightbulb fa-2x" style="color: rgba(240,196,25,0.1);"></i>
-    </div>
-</div>
-
-<div class="container my-5 page-container">
- <!-- Enhanced Welcome Header -->
-<div id="guidanceCarousel" class="carousel slide welcome-header position-relative" data-bs-ride="carousel" data-bs-interval="3000" style="min-height: 60vh; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); overflow: hidden;">
-    <!-- Decorative floating shapes -->
-    <div class="position-absolute top-0 start-0 w-100 h-100">
-        <div class="floating-shape" style="position: absolute; width: 100px; height: 100px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; top: 10%; left: 15%; animation: float 6s ease-in-out infinite;"></div>
-        <div class="floating-shape" style="position: absolute; width: 150px; height: 150px; background: rgba(255, 255, 255, 0.05); border-radius: 50%; top: 40%; left: 70%; animation: float 8s ease-in-out infinite alternate;"></div>
-        <div class="floating-shape" style="position: absolute; width: 80px; height: 80px; background: rgba(255, 255, 255, 0.08); border-radius: 50%; top: 70%; left: 30%; animation: float 7s ease-in-out infinite;"></div>
-    </div>
-
-    <!-- Carousel content -->
-    <div class="carousel-inner position-relative w-100 h-100">
-        <!-- Slide 1: PROJECT JEREMIAH -->
-        <div class="carousel-item active">
-            <div class="d-flex flex-column justify-content-center align-items-center text-center h-100">
-                <h1 class="welcome-title">PROJECT JEREMIAH</h1>
-             <p class="lead mb-0" style="font-size: 1.3rem; max-width: 700px; margin: 0 auto;"><em>"Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not."</em></p>
-                <a class="btn btn-success mt-4" href="{{-- {{ route('user.projectJeremiah') }} --}}">Learn More</a>
-            </div>
+{{-- Hero --}}
+<div class="pub-hero fade-up">
+    <div class="hero-inner">
+        <div style="display:inline-flex;align-items:center;gap:8px;
+                    padding:5px 16px;border:1px solid rgba(240,196,25,.35);
+                    border-radius:999px;background:rgba(240,196,25,.1);
+                    color:var(--gold);font-size:.78rem;font-weight:700;
+                    text-transform:uppercase;letter-spacing:.5px;margin-bottom:20px;">
+            <i class="fas fa-dove"></i> Guidance Services Office &mdash; NU Laguna
         </div>
-
-        <!-- Slide 2: Guidance Office Services -->
-        <div class="carousel-item">
-            <div class="d-flex flex-column justify-content-center align-items-center text-center h-100">
-                <h1 class="display-3 fw-bold mb-3" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3);">Guidance Office Services</h1>
-                <p class="lead mb-0" style="font-size: 1.3rem; max-width: 700px; margin: 0 auto;">Discover our range of counseling services, academic support programs, and peer mediation.</p>
-                <a class="btn btn-primary mt-4" href="{{ route('user.services') }}">Explore Services</a>
-            </div>
-        </div>
-
-        <!-- Slide 3: e-Hayag -->
-        <div class="carousel-item">
-            <div class="d-flex flex-column justify-content-center align-items-center text-center h-100">
-                <h1 class="display-3 fw-bold mb-3" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3);">e-Hayag Platform</h1>
-                 <p class="lead mb-0" style="font-size: 1.3rem; max-width: 700px; margin: 0 auto;">Your safe and anonymous space to share thoughts and experiences. Express yourself freely and find support.</p>
-                <a class="btn btn-primary mt-4" href="{{ route('user.freedomwall.add') }}">Share Anonymously</a>
-            </div>
-        </div>
-
-        <!-- Slide 4: Emergency Support -->
-        <div class="carousel-item">
-            <div class="d-flex flex-column justify-content-center align-items-center text-center h-100">
-                <h1 class="display-3 fw-bold mb-3" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3);">Emergency Support</h1>
-                <p class="lead mb-0" style="font-size: 1.3rem; max-width: 700px; margin: 0 auto;">Access 24/7 mental health crisis support and emergency resources. You're never alone — help is always here.</p>
-                <a class="btn btn-danger mt-4" href="{{ route('user.hotline') }}">Get Help Now</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#guidanceCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#guidanceCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
-
-<!-- Floating animation style -->
-<style>
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
-}
-</style>
-
-
-    <!-- Enhanced Card Options -->
-    <div class="row justify-content-center g-4">
-        <!-- Services -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card option-card services-card">
-                <div class="card-content text-center">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-hands-helping fa-4x"></i>
-                    </div>
-                    <h4 class="card-title">Comprehensive Services</h4>
-                    <p class="card-description">
-                        Discover our range of counseling services, academic support programs, and peer mediation designed to help you thrive in every aspect of your educational journey.
-                    </p>
-                    <a class="btn card-btn" href="{{ route('user.services') }}">Explore Services</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- e-Hayag -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card option-card ehayag-card">
-                <div class="card-content text-center">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-comments fa-4x"></i>
-                    </div>
-                    <h4 class="card-title">e-Hayag Platform</h4>
-                    <p class="card-description">
-                        Your safe, anonymous digital space to share thoughts, concerns, and experiences. Express yourself freely without judgment in our secure environment.
-                    </p>
-                    <a class="btn card-btn" href="{{ route('user.freedomwall.add') }}">Share Anonymously</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Emergency Hotline -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card option-card emergency-card">
-                <div class="card-content text-center">
-                    <div class="icon-wrapper">
-                        <i class="fas fa-phone-alt fa-4x"></i>
-                    </div>
-                    <h4 class="card-title">Emergency Support</h4>
-                    <p class="card-description">
-                        Access 24/7 mental health crisis support and emergency resources. Professional help is always available when you need immediate assistance.
-                    </p>
-                    <a class="btn card-btn" href="{{ route('user.hotline') }}">Get Help Now</a>
-                    </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Additional motivational section -->
-    <div class="text-center mt-5 pt-4">
-        <p class="lead" style="color: #e8e8e8; font-style: italic; opacity: 0.8;">
-            "Every step forward is progress. Every conversation matters. You're not alone on this journey."
+        <h1>Project Jeremiah 33:3</h1>
+        <p>
+            "Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not."<br>
+            <em style="font-size:.9rem;opacity:.7;">— Jeremiah 33:3</em>
         </p>
+        <p style="margin-top:14px;">
+            Your trusted partner in academic success, personal growth, and mental wellness.
+            We are here to support every step of your journey with compassion and expertise.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px;">
+            <a href="{{ route('user.freedomwall.add') }}" class="opt-btn" style="padding:12px 28px;font-size:.92rem;">
+                <i class="fas fa-comment-dots"></i> Share on e-Hayag
+            </a>
+            <a href="{{ route('user.services') }}"
+               style="display:inline-flex;align-items:center;gap:7px;padding:12px 28px;
+                      background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.25);
+                      border-radius:999px;font-size:.92rem;font-weight:700;text-decoration:none;
+                      transition:background .2s;"
+               onmouseover="this.style.background='rgba(255,255,255,.18)'"
+               onmouseout="this.style.background='rgba(255,255,255,.1)'">
+                <i class="fas fa-concierge-bell"></i> Our Services
+            </a>
+        </div>
     </div>
 </div>
+
+{{-- 3 Feature Cards --}}
+<div class="row g-3 mb-4">
+    <div class="col-lg-4 col-md-6 fade-up fade-up-d1">
+        <div class="opt-card">
+            <div class="opt-icon" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);color:#1d4ed8;">
+                <i class="fas fa-concierge-bell"></i>
+            </div>
+            <h3>Guidance Services</h3>
+            <p>Counseling, academic support, peer mediation, and personal development programs designed to help you thrive.</p>
+            <a href="{{ route('user.services') }}" class="opt-btn">
+                <i class="fas fa-arrow-right"></i> Explore Services
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 fade-up fade-up-d2">
+        <div class="opt-card">
+            <div class="opt-icon" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:#16a34a;">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+            <h3>e-Hayag Platform</h3>
+            <p>Your safe, confidential digital space to express thoughts and feelings. Seen only by your guidance counselors.</p>
+            <a href="{{ route('user.freedomwall.add') }}" class="opt-btn">
+                <i class="fas fa-arrow-right"></i> Share Anonymously
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 fade-up fade-up-d3">
+        <div class="opt-card">
+            <div class="opt-icon" style="background:linear-gradient(135deg,#fff0f0,#fee2e2);color:#dc2626;">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <h3>Emergency Hotlines</h3>
+            <p>24/7 crisis support and mental health resources. Professional help is always available when you need it most.</p>
+            <a href="{{ route('user.hotline') }}" class="opt-btn danger">
+                <i class="fas fa-arrow-right"></i> Get Help Now
+            </a>
+        </div>
+    </div>
+</div>
+
+{{-- Register / Reactivate strip --}}
+<div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;
+            padding:22px 28px;display:flex;align-items:center;justify-content:space-between;
+            flex-wrap:wrap;gap:16px;box-shadow:var(--shadow);" class="fade-up fade-up-d4">
+    <div>
+        <div style="font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:4px;">
+            <i class="fas fa-shield-halved" style="color:var(--gold);margin-right:7px;"></i>
+            Need an account to post on e-Hayag?
+        </div>
+        <div style="font-size:.82rem;color:var(--muted);">
+            Register with your school email — your program and year level are saved so you won't need to re-enter them.
+        </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a href="{{ route('student.register') }}"
+           style="display:inline-flex;align-items:center;gap:7px;padding:9px 20px;
+                  background:linear-gradient(135deg,var(--navy),var(--navy2));
+                  color:var(--gold);border-radius:9px;font-size:.85rem;font-weight:700;
+                  text-decoration:none;">
+            <i class="fas fa-user-plus"></i> Register
+        </a>
+        <a href="{{ route('student.reactivate.request') }}"
+           style="display:inline-flex;align-items:center;gap:7px;padding:9px 20px;
+                  background:#f3f4f6;color:var(--navy);border:1px solid var(--border);
+                  border-radius:9px;font-size:.85rem;font-weight:700;text-decoration:none;">
+            <i class="fas fa-rotate-right"></i> Reactivate
+        </a>
+    </div>
+</div>
+
+@if(isset($quote) && $quote)
+<div style="text-align:center;margin-top:32px;padding:22px;
+            color:var(--muted);font-style:italic;font-size:.9rem;line-height:1.7;">
+    "{{ $quote->quote }}"
+    @if($quote->author)
+        <div style="margin-top:6px;font-style:normal;font-weight:700;font-size:.8rem;color:var(--navy);">
+            — {{ $quote->author }}
+        </div>
+    @endif
+</div>
+@endif
 
 @endsection

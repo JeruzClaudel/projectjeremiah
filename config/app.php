@@ -123,4 +123,12 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Protected Admin IDs
+    |--------------------------------------------------------------------------
+    | Comma-separated IDs of admin accounts that can never be deleted.
+    */
+    'protected_admin_ids' => env('PROTECTED_ADMIN_IDS', '1,2'),
+
 ];

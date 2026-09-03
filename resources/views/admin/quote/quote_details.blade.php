@@ -1,6 +1,4 @@
-@vite('resources/css/style1.css')
-@vite('resources/js/message.js')
-<x-app-layout>
+<x-app-layout title="Quote Details">
         <div class="top-bar">
             <a class="top-button back" href="{{ route('admin.quote.index') }}">&larr; BACK</a>
             <h2 class="navigation-title">Quote - {{ $quote['author'] }}</h2>

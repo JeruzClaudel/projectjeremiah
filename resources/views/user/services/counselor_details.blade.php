@@ -1,64 +1,97 @@
 @extends('layouts.user')
-
-@section('styles')
-    @vite('resources/css/styles.css')
-@endsection
+@section('title', $counselor->name . ' — Counselor')
 
 @section('content')
-<div class="container my-5">
-    <div class="card p-4">
-        <div class="row align-items-center">
-            <!-- Image Section -->
-            <div class="col-md-3 text-center mb-3 mb-md-0">
-                <img src="{{ asset('storage/' . $counselor->image) }}" 
-                     alt="{{ $counselor->name }}" 
-                     class="rounded-circle img-fluid counselor-img shadow" 
-                     style="width: 160px; height: 160px; object-fit: cover;">
-            </div>
 
-            <!-- Information Section -->
-            <div class="col-md-9">
-                <h2 class="text-primary mb-2">{{ $counselor->name }}</h2>
-                <p class="mb-1"><strong>Position:</strong> {{ $counselor->position }}</p>
-                <p class="mb-1"><strong>Assigned Department:</strong> {{ $counselor->college }}</p>
-                <p class="mb-1"><strong>Email:</strong> <a href="mailto:{{ $counselor->email }}">{{ $counselor->email }}</a></p>
-                <p class="mb-1"><strong>MS Teams:</strong> {{ $counselor->ms_teams_account }}</p>
-            </div>
+<a href="{{ route('user.services') }}" class="back-link fade-up">
+    <i class="fas fa-arrow-left"></i> Back to Services
+</a>
+
+<div style="background:#fff;border-radius:18px;border:1.5px solid var(--border);
+            padding:32px;box-shadow:var(--shadow);" class="fade-up fade-up-d1">
+
+    {{-- Profile header --}}
+    <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:28px;">
+        <div style="flex-shrink:0;">
+            @if($counselor->image)
+                <img src="{{ asset('storage/' . $counselor->image) }}"
+                     alt="{{ $counselor->name }}"
+                     style="width:110px;height:110px;border-radius:50%;object-fit:cover;
+                            border:3px solid var(--gold);">
+            @else
+                <div style="width:110px;height:110px;border-radius:50%;
+                            background:linear-gradient(135deg,var(--navy),var(--navy2));
+                            display:flex;align-items:center;justify-content:center;
+                            color:var(--gold);font-size:2.5rem;font-weight:800;
+                            border:3px solid var(--gold);">
+                    {{ strtoupper(substr($counselor->name, 0, 1)) }}
+                </div>
+            @endif
         </div>
-
-        <!-- Weekly Availability -->
-        <hr class="my-4">
-        <div class="counselor-schedule">
-            <h3 class="text-blue">Weekly Availability</h3>
-            @php
-                $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-            @endphp
-
-            <div class="row">
-                @foreach($days as $day)
-                    @php
-                        $daySchedules = $counselor->schedules->where('day_of_week', $day);
-                    @endphp
-                    <div class="col-md-4 mb-3">
-                        <div class="schedule-block p-3 border rounded shadow-sm h-100">
-                            <h5 class="text-gold">{{ $day }}</h5>
-                            @if($daySchedules->isNotEmpty())
-                                <ul class="list-unstyled mb-0">
-                                    @foreach($daySchedules as $schedule)
-                                        <li>
-                                            {{ \Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }} - 
-                                            {{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @else
-                                <p class="text-muted mb-0">Not Available</p>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
+        <div style="flex:1;min-width:200px;">
+            <h1 style="font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:6px;">
+                {{ $counselor->name }}
+            </h1>
+            @if($counselor->position)
+            <div style="font-size:.88rem;color:var(--muted);margin-bottom:4px;">
+                <i class="fas fa-briefcase me-1" style="color:var(--gold);"></i> {{ $counselor->position }}
             </div>
+            @endif
+            @if($counselor->college)
+            <div style="font-size:.88rem;color:var(--muted);margin-bottom:4px;">
+                <i class="fas fa-building-columns me-1" style="color:var(--gold);"></i> {{ $counselor->college }}
+            </div>
+            @endif
+            @if($counselor->email)
+            <div style="font-size:.88rem;color:var(--muted);margin-bottom:4px;">
+                <i class="fas fa-envelope me-1" style="color:var(--gold);"></i>
+                <a href="mailto:{{ $counselor->email }}" style="color:var(--navy);font-weight:600;">{{ $counselor->email }}</a>
+            </div>
+            @endif
+            @if($counselor->ms_teams_account)
+            <div style="font-size:.88rem;color:var(--muted);">
+                <i class="fas fa-video me-1" style="color:var(--gold);"></i> {{ $counselor->ms_teams_account }}
+            </div>
+            @endif
         </div>
     </div>
+
+    {{-- Weekly availability --}}
+    <div class="sec-title">Weekly Availability</div>
+    <div class="sec-line"></div>
+
+    @php
+        $days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    @endphp
+
+    <div class="row g-2">
+        @foreach($days as $day)
+        @php $daySchedules = $counselor->schedules->where('day_of_week', $day); @endphp
+        <div class="col-lg-4 col-md-6">
+            <div style="background:{{ $daySchedules->isNotEmpty() ? '#f0fdf4' : '#f9fafb' }};
+                        border:1.5px solid {{ $daySchedules->isNotEmpty() ? '#bbf7d0' : '#e5e7eb' }};
+                        border-radius:10px;padding:14px 16px;">
+                <div style="font-size:.78rem;font-weight:800;color:{{ $daySchedules->isNotEmpty() ? '#166534' : '#9ca3af' }};
+                             text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
+                    {{ $day }}
+                </div>
+                @if($daySchedules->isNotEmpty())
+                    @foreach($daySchedules as $schedule)
+                    <div style="font-size:.88rem;font-weight:600;color:#111827;
+                                display:flex;align-items:center;gap:6px;">
+                        <i class="fas fa-clock" style="color:#16a34a;font-size:.7rem;"></i>
+                        {{ \Carbon\Carbon::parse($schedule->start_time)->format('h:i A') }}
+                        &mdash;
+                        {{ \Carbon\Carbon::parse($schedule->end_time)->format('h:i A') }}
+                    </div>
+                    @endforeach
+                @else
+                    <div style="font-size:.84rem;color:#9ca3af;">Not Available</div>
+                @endif
+            </div>
+        </div>
+        @endforeach
+    </div>
 </div>
+
 @endsection

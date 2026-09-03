@@ -1,51 +1,85 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    {{-- Session status --}}
+    @if (session('status'))
+    <div class="lf-status">
+        <i class="fas fa-circle-check" style="margin-right:5px;"></i>
+        {{ session('status') }}
+    </div>
+    @endif
+
+    {{-- Error banner --}}
+    @if ($errors->any())
+    <div class="lf-err-banner">
+        <i class="fas fa-circle-exclamation" style="flex-shrink:0;margin-top:1px;"></i>
+        <div>
+            @foreach ($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
+    </div>
+    @endif
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        {{-- Email --}}
+        <div class="lf-group">
+            <label for="email">Email Address</label>
+            <div class="lf-input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" name="email"
+                       value="{{ old('email') }}"
+                       placeholder="admin@example.com"
+                       required autofocus autocomplete="username">
+            </div>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        {{-- Password --}}
+        <div class="lf-group">
+            <label for="password">Password</label>
+            <div class="lf-input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password"
+                       placeholder="••••••••"
+                       required autocomplete="current-password">
+                <button type="button" class="pw-toggle" onclick="togglePassword()" id="pw-toggle-btn" title="Show/hide password">
+                    <i class="fas fa-eye" id="pw-icon"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+        {{-- Remember + Forgot --}}
+        <div class="lf-row">
+            <label class="lf-remember">
+                <input type="checkbox" name="remember" id="remember_me">
+                Remember me
             </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+            <a href="{{ route('password.request') }}" class="lf-forgot">
+                Forgot password?
+            </a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
         </div>
+
+        <button type="submit" class="btn-login">
+            <i class="fas fa-arrow-right-to-bracket" style="margin-right:8px;"></i>
+            Sign In
+        </button>
     </form>
 
-    <a href="{{ route('home') }}">
-     <x-primary-button class="ms-3" >BACK</x-primary-button>
-    </a>
 </x-guest-layout>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('password');
+    const icon  = document.getElementById('pw-icon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+</script>

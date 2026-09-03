@@ -37,9 +37,9 @@ class AdminConsultationController extends Controller
 
     public function store(Request $request) {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'description' => 'required|string|max:65000',
-            'request_link' => 'required|string|max:10000',
+            'name'         => 'required|string|max:100',
+            'description'  => 'required|string|max:65000',
+            'request_link' => 'required|url|max:2048',
         ]);
 
         $consultation = Consultation::create($validated);
@@ -51,9 +51,9 @@ class AdminConsultationController extends Controller
 
     public function update(Request $request, Consultation $id) {
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'description' => 'required|string|max:65000',
-            'request_link' => 'required|string|max:10000',
+            'name'         => 'required|string|max:100',
+            'description'  => 'required|string|max:65000',
+            'request_link' => 'required|url|max:2048',
         ]);
 
         $id->name = $validated['name'];

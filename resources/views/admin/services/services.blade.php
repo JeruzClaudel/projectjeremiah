@@ -1,6 +1,4 @@
-@vite('resources/css/style1.css')
-@vite('resources/js/message.js')
-<x-app-layout>
+<x-app-layout title="Services">
     <div class="top-bar">
         <h2 class="navigation-title">Manage Services</h2>
         <a class="top-button add" href="{{ route('admin.services.add')}}">&#65291 ADD SERVICES</a>

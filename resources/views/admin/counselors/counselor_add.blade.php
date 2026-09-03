@@ -1,5 +1,4 @@
-@vite('resources/css/style1.css')
-<x-app-layout>
+<x-app-layout title="Add Counselor">
         <div class="top-bar">
             <a class="top-button back" href="{{ route('admin.counselor.dashboard') }}">&larr; BACK</a>
             <h2 class="navigation-title">Add Counselor</h2>
