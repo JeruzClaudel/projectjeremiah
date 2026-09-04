@@ -148,7 +148,7 @@ class StudentAuthController extends Controller
         session()->forget('pending_registration');
 
         return redirect()->route('home')
-            ->with('status', 'Account created successfully! You can now use your email to submit e-Hayag posts.');
+            ->with('account_registered', $user->name);
     }
 
     public function resendRegisterOtp(Request $request)

@@ -24,6 +24,7 @@ class StudentReactivateController extends Controller
                 'required', 'email',
                 function ($attribute, $value, $fail) {
                     $allowed = ['@students.nu-laguna.edu.ph', '@shs.nu-laguna.edu.ph'];
+                  
                     $v = strtolower($value);
                     $valid = false;
                     foreach ($allowed as $domain) {
@@ -130,7 +131,7 @@ class StudentReactivateController extends Controller
         session()->forget('otp_email');
 
         return redirect()->route('home')
-            ->with('status', 'Your account has been reactivated. You can now submit e-Hayag posts.');
+            ->with('account_reactivated', $student->name ?? 'Student');
     }
 
     public function resendOtp(Request $request)
