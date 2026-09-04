@@ -150,6 +150,10 @@
                 </td>
                 <td style="color:#9ca3af;font-size:.75rem;">{{ $student->created_at->format('M d, Y') }}</td>
                 <td>
+                    <a href="{{ route('admin.students.edit', $student) }}"
+                       class="btn-sm" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;text-decoration:none;margin-right:4px;">
+                        <i class="fas fa-pen"></i> Edit
+                    </a>
                     <form id="toggle-{{ $student->id }}"
                           action="{{ route('admin.students.toggle_active',$student) }}"
                           method="POST" style="display:inline;margin:0;">

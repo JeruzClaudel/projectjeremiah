@@ -1,69 +1,83 @@
 @extends('layouts.user')
-@section('title', 'e-Hayag — Write a Post')
+@section('title', 'Share a Concern — e-Hayag')
 
 @section('content')
 
-<div class="ehayag-hero fade-up">
-    <div class="ej-icon"><i class="fas fa-pen-to-square"></i></div>
-    <h1>Share Your Thoughts</h1>
-    <p>Your post is confidential — seen only by guidance counselors who are here to support you.</p>
+<div class="page-hero">
+    <div class="shell">
+        <div class="breadcrumbs">e-Hayag / Share your concern</div>
+        <h1>Share your concern</h1>
+        <p>You can take your time. There is no need to make your experience sound a certain way — your honest words are enough.</p>
+    </div>
 </div>
 
-<div class="ehayag-form-card fade-up fade-up-d1">
-    <form action="{{ route('freedomwall.store') }}" method="POST">
-        @csrf
+<div class="write-layout">
+    <div class="shell">
+        <div class="form-card">
 
-        {{-- Email --}}
-        <div class="ef-group">
-            <label for="postName">
-                Email <span style="color:#ef4444;">*</span>
-            </label>
-            <input type="email" id="postName" name="postName"
-                   class="ef-input"
-                   placeholder="Enter your registered student email"
-                   value="{{ old('postName') }}"
-                   required>
-            <span class="ef-helper">
-                Only <strong>@students.nu-laguna.edu.ph</strong> and <strong>@shs.nu-laguna.edu.ph</strong> emails are accepted.
-                Not registered? <a href="{{ route('student.register') }}">Register here</a>
-            </span>
-            @error('postName')
-                <span class="field-error">{{ $message }}</span>
-                @if(session('deactivated_email'))
-                    <div class="deactivate-box" style="margin-top:10px;">
-                        <p><i class="fas fa-lock me-1"></i>Your account is currently deactivated.</p>
-                        <a href="{{ route('student.reactivate.request') }}"
-                           style="display:inline-flex;align-items:center;gap:6px;
-                                  padding:8px 18px;background:var(--gold);color:var(--navy);
-                                  border-radius:8px;font-size:.82rem;font-weight:800;text-decoration:none;">
-                            <i class="fas fa-rotate-right"></i> Reactivate My Account
-                        </a>
+            <div class="notice notice-private">
+                <span class="notice-icon">⌾</span>
+                <div>
+                    <strong>A private space to begin</strong>
+                    <p>Your message is for authorized guidance counselors only. Only <strong>@students.nu-laguna.edu.ph</strong> and <strong>@shs.nu-laguna.edu.ph</strong> emails are accepted.</p>
+                </div>
+            </div>
+
+            <form action="{{ route('freedomwall.store') }}" method="POST">
+                @csrf
+
+                <div class="form-grid">
+                    {{-- Email --}}
+                    <div class="field full">
+                        <label for="postName">Your registered student email <span style="color:#dc2626;">*</span></label>
+                        <input type="email" id="postName" name="postName"
+                               value="{{ old('postName') }}"
+                               placeholder="yourname@students.nu-laguna.edu.ph"
+                               required>
+                        @error('postName')
+                            <span class="field-error">{{ $message }}</span>
+                            @if(session('deactivated_email'))
+                            <div class="field-deactivate-box" style="margin-top:8px;">
+                                <p style="font-size:.82rem;color:var(--navy);margin-bottom:8px;font-weight:600;">
+                                    Your account is currently deactivated.
+                                </p>
+                                <a href="{{ route('student.reactivate.request') }}" class="btn btn-primary btn-sm">
+                                    Reactivate Account ↗
+                                </a>
+                            </div>
+                            @endif
+                        @enderror
+                        <span class="field-note">
+                            Not registered yet? <a href="{{ route('student.register') }}" style="color:var(--navy);font-weight:700;">Register here</a>
+                        </span>
                     </div>
-                @endif
-            @enderror
-        </div>
 
-        {{-- Post content --}}
-        <div class="ef-group">
-            <label for="post">Your Message <span style="color:#ef4444;">*</span></label>
-            <textarea id="post" name="post"
-                      class="ef-input ef-textarea"
-                      placeholder="Express yourself freely — no filters needed. This is your safe space."
-                      required>{{ old('post') }}</textarea>
-            @error('post')
-                <span class="field-error">{{ $message }}</span>
-            @enderror
-        </div>
+                    {{-- Post --}}
+                    <div class="field full">
+                        <label for="post">Your concern <span style="color:#dc2626;">*</span></label>
+                        <textarea id="post" name="post" placeholder="Share what has been on your mind…" required>{{ old('post') }}</textarea>
+                        @error('post')
+                            <span class="field-error">{{ $message }}</span>
+                        @enderror
+                        <span class="field-note">You can write in English or Filipino. Your program and year level are pulled automatically from your account.</span>
+                    </div>
+                </div>
 
-        <div class="info-box" style="margin-bottom:18px;font-size:.8rem;">
-            <i class="fas fa-shield-halved me-1"></i>
-            Everything you write here is private. Only your guidance counselors will read it.
-        </div>
+                <div class="notice notice-emergency" style="margin-bottom:0;">
+                    <span class="notice-icon">!</span>
+                    <div>
+                        <strong>Please do not use e-Hayag for immediate emergencies.</strong>
+                        <p>If you are in immediate danger or need urgent help, contact emergency services or visit our <a href="{{ route('user.hotline') }}" style="text-decoration:underline;font-weight:700;color:var(--navy);">Hotlines page</a>.</p>
+                    </div>
+                </div>
 
-        <button type="submit" class="ef-submit">
-            <i class="fas fa-paper-plane me-2"></i> Submit
-        </button>
-    </form>
+                <div class="form-actions">
+                    <a class="btn btn-secondary" href="{{ route('user.freedomwall.add') }}">Back</a>
+                    <button class="btn btn-primary" type="submit">Submit concern <span>↗</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @endsection

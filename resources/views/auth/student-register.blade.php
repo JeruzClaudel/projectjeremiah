@@ -1,180 +1,133 @@
 <x-student-guest-layout>
-@section('title', 'Student Registration')
+@section('title', 'Register — Project Jeremiah')
 
-<div class="student-auth-card">
+<div class="guest-card-header">
+    <div class="guest-icon">＋</div>
+    <h1>Create your account</h1>
+    <p>Register to use e-Hayag and guidance services</p>
+</div>
 
-    <div class="student-auth-header">
-        <div class="brand-icon"><i class="fas fa-user-plus"></i></div>
-        <h1>Create Account</h1>
-        <p>Register to use e-Hayag and guidance services</p>
+@if($errors->any())
+    <div class="guest-error">
+        @foreach($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
     </div>
+@endif
 
-    @if($errors->any())
-        <div class="error-banner">
-            @foreach($errors->all() as $error)
-                <div><i class="fas fa-circle-exclamation me-1"></i>{{ $error }}</div>
-            @endforeach
-        </div>
-    @endif
+@if(session('status'))
+    <div class="guest-status">{{ session('status') }}</div>
+@endif
 
-    @if(session('status'))
-        <div class="status-banner">
-            <i class="fas fa-circle-check me-1"></i>{{ session('status') }}
-        </div>
-    @endif
+<form method="POST" action="{{ route('student.register.post') }}">
+    @csrf
 
-    <form method="POST" action="{{ route('student.register.post') }}">
-        @csrf
+    <div class="form-grid" style="margin-bottom:0;">
 
-        {{-- Full Name --}}
-        <div class="sf-group">
-            <label>Full Name <span style="color:#ef4444;">*</span></label>
-            <div class="input-wrap">
-                <i class="fas fa-user"></i>
-                <input type="text" name="name" value="{{ old('name') }}"
-                       placeholder="e.g. Juan dela Cruz" required autofocus>
-            </div>
+        <div class="field full">
+            <label for="name">Full name <span style="color:#dc2626;">*</span></label>
+            <input type="text" id="name" name="name" value="{{ old('name') }}"
+                   placeholder="e.g. Juan dela Cruz" required autofocus>
         </div>
 
-        {{-- Email --}}
-        <div class="sf-group">
-            <label>Email Address <span style="color:#ef4444;">*</span></label>
-            <div class="input-wrap">
-                <i class="fas fa-envelope"></i>
-                <input type="email" name="email" value="{{ old('email') }}"
-                       placeholder="yourname@students.nu-laguna.edu.ph" required>
-            </div>
-            <small style="font-size:.72rem;color:#9ca3af;">
-                Must be your NU Laguna student email
-                (<strong>@students.nu-laguna.edu.ph</strong> or <strong>@shs.nu-laguna.edu.ph</strong>)
-            </small>
+        <div class="field full">
+            <label for="email">Email address <span style="color:#dc2626;">*</span></label>
+            <input type="email" id="email" name="email" value="{{ old('email') }}"
+                   placeholder="yourname@students.nu-laguna.edu.ph" required>
+            <span class="field-note">Only <strong>@students.nu-laguna.edu.ph</strong> and <strong>@shs.nu-laguna.edu.ph</strong> are accepted.</span>
         </div>
 
-        {{-- Program --}}
-        <div class="sf-group">
-            <label>Program <span style="color:#ef4444;">*</span></label>
-            <div class="input-wrap" style="padding:0; position:relative;">
-                <i class="fas fa-graduation-cap" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;z-index:1;color:#9ca3af;font-size:.85rem;"></i>
-                <select name="program" id="reg-program" required
-                        onchange="updateRegYearLevel(this.value)"
-                        style="width:100%;padding:12px 12px 12px 40px;border:none;background:transparent;
-                               font-size:.92rem;color:#374151;cursor:pointer;appearance:none;outline:none;">
-                    <option value="">Select your program</option>
-                    <optgroup label="School of Arts and Sciences">
-                        <option value="ABCOMM"  {{ old('program')=='ABCOMM'  ?'selected':'' }}>ABCOMM — Bachelor of Arts in Communication</option>
-                        <option value="BMMA"    {{ old('program')=='BMMA'    ?'selected':'' }}>BMMA — Bachelor of Multimedia Arts</option>
-                        <option value="BSCRIM"  {{ old('program')=='BSCRIM'  ?'selected':'' }}>BSCRIM — Bachelor of Science in Criminology</option>
-                        <option value="BSESS"   {{ old('program')=='BSESS'   ?'selected':'' }}>BSESS — BS Exercise and Sports Sciences</option>
-                        <option value="BSPsych" {{ old('program')=='BSPsych' ?'selected':'' }}>BSPsych — Bachelor of Science in Psychology</option>
-                    </optgroup>
-                    <optgroup label="School of Accountancy, Business and Management">
-                        <option value="BSA"     {{ old('program')=='BSA'     ?'selected':'' }}>BSA — Bachelor of Science in Accountancy</option>
-                        <option value="BSAIS"   {{ old('program')=='BSAIS'   ?'selected':'' }}>BSAIS — BS Accounting Information System</option>
-                        <option value="BSTM"    {{ old('program')=='BSTM'    ?'selected':'' }}>BSTM — BS Tourism Management</option>
-                        <option value="BSBA-DM" {{ old('program')=='BSBA-DM' ?'selected':'' }}>BSBA-DM — BSBA major in Digital Marketing</option>
-                    </optgroup>
-                    <optgroup label="School of Engineering and Architecture">
-                        <option value="BSArch" {{ old('program')=='BSArch' ?'selected':'' }}>BSArch — BS Architecture</option>
-                        <option value="BSCE"   {{ old('program')=='BSCE'   ?'selected':'' }}>BSCE — BS Civil Engineering</option>
-                        <option value="BSCpE"  {{ old('program')=='BSCpE'  ?'selected':'' }}>BSCpE — BS Computer Engineering</option>
-                    </optgroup>
-                    <optgroup label="School of Computer Studies">
-                        <option value="BSIT" {{ old('program')=='BSIT' ?'selected':'' }}>BSIT — BS Information Technology</option>
-                        <option value="BSCS" {{ old('program')=='BSCS' ?'selected':'' }}>BSCS — BS Computer Science</option>
-                        <option value="BSIS" {{ old('program')=='BSIS' ?'selected':'' }}>BSIS — BS Information Systems</option>
-                    </optgroup>
-                    <optgroup label="Senior High School">
-                        <option value="GRADE-11" {{ old('program')=='GRADE-11' ?'selected':'' }}>Grade 11 — Senior High School</option>
-                        <option value="GRADE-12" {{ old('program')=='GRADE-12' ?'selected':'' }}>Grade 12 — Senior High School</option>
-                    </optgroup>
-                </select>
-            </div>
-            @error('program')<span class="text-danger">{{ $message }}</span>@enderror
+        <div class="field">
+            <label for="reg-program">Program <span style="color:#dc2626;">*</span></label>
+            <select id="reg-program" name="program" required onchange="updateRegYearLevel(this.value)">
+                <option value="">Select your program</option>
+                <optgroup label="School of Arts and Sciences">
+                    <option value="ABCOMM"  {{ old('program')=='ABCOMM'  ?'selected':'' }}>ABCOMM — Bachelor of Arts in Communication</option>
+                    <option value="BMMA"    {{ old('program')=='BMMA'    ?'selected':'' }}>BMMA — Bachelor of Multimedia Arts</option>
+                    <option value="BSCRIM"  {{ old('program')=='BSCRIM'  ?'selected':'' }}>BSCRIM — BS Criminology</option>
+                    <option value="BSESS"   {{ old('program')=='BSESS'   ?'selected':'' }}>BSESS — BS Exercise and Sports Sciences</option>
+                    <option value="BSPsych" {{ old('program')=='BSPsych' ?'selected':'' }}>BSPsych — BS Psychology</option>
+                </optgroup>
+                <optgroup label="School of Accountancy, Business and Management">
+                    <option value="BSA"     {{ old('program')=='BSA'     ?'selected':'' }}>BSA — BS Accountancy</option>
+                    <option value="BSAIS"   {{ old('program')=='BSAIS'   ?'selected':'' }}>BSAIS — BS Accounting Information System</option>
+                    <option value="BSTM"    {{ old('program')=='BSTM'    ?'selected':'' }}>BSTM — BS Tourism Management</option>
+                    <option value="BSBA-DM" {{ old('program')=='BSBA-DM' ?'selected':'' }}>BSBA-DM — BSBA major in Digital Marketing</option>
+                </optgroup>
+                <optgroup label="School of Engineering and Architecture">
+                    <option value="BSArch" {{ old('program')=='BSArch' ?'selected':'' }}>BSArch — BS Architecture</option>
+                    <option value="BSCE"   {{ old('program')=='BSCE'   ?'selected':'' }}>BSCE — BS Civil Engineering</option>
+                    <option value="BSCpE"  {{ old('program')=='BSCpE'  ?'selected':'' }}>BSCpE — BS Computer Engineering</option>
+                </optgroup>
+                <optgroup label="School of Computer Studies">
+                    <option value="BSIT" {{ old('program')=='BSIT' ?'selected':'' }}>BSIT — BS Information Technology</option>
+                    <option value="BSCS" {{ old('program')=='BSCS' ?'selected':'' }}>BSCS — BS Computer Science</option>
+                    <option value="BSIS" {{ old('program')=='BSIS' ?'selected':'' }}>BSIS — BS Information Systems</option>
+                </optgroup>
+                <optgroup label="Senior High School">
+                    <option value="GRADE-11" {{ old('program')=='GRADE-11' ?'selected':'' }}>Grade 11 — Senior High School</option>
+                    <option value="GRADE-12" {{ old('program')=='GRADE-12' ?'selected':'' }}>Grade 12 — Senior High School</option>
+                </optgroup>
+            </select>
+            @error('program')<span class="field-error">{{ $message }}</span>@enderror
         </div>
 
-        {{-- Year Level --}}
-        <div class="sf-group">
-            <label>Year Level <span style="color:#ef4444;">*</span></label>
-            <div class="input-wrap" style="padding:0; position:relative;">
-                <i class="fas fa-layer-group" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;z-index:1;color:#9ca3af;font-size:.85rem;"></i>
-                <select name="year_level" id="reg-year-level" required
-                        style="width:100%;padding:12px 12px 12px 40px;border:none;background:transparent;
-                               font-size:.92rem;color:#374151;cursor:pointer;appearance:none;outline:none;">
-                    <option value="">Select year level</option>
-                </select>
-            </div>
-            @error('year_level')<span class="text-danger">{{ $message }}</span>@enderror
+        <div class="field">
+            <label for="reg-year-level">Year level <span style="color:#dc2626;">*</span></label>
+            <select id="reg-year-level" name="year_level" required>
+                <option value="">Select year level</option>
+            </select>
+            @error('year_level')<span class="field-error">{{ $message }}</span>@enderror
         </div>
 
-        {{-- Password --}}
-        <div class="sf-group">
-            <label>Password <span style="color:#ef4444;">*</span></label>
-            <div class="input-wrap">
-                <i class="fas fa-lock"></i>
-                <input type="password" name="password" placeholder="Min. 8 characters" required>
-            </div>
+        <div class="field">
+            <label for="password">Password <span style="color:#dc2626;">*</span></label>
+            <input type="password" id="password" name="password" placeholder="Min. 8 characters" required>
+            @error('password')<span class="field-error">{{ $message }}</span>@enderror
         </div>
 
-        {{-- Confirm Password --}}
-        <div class="sf-group">
-            <label>Confirm Password <span style="color:#ef4444;">*</span></label>
-            <div class="input-wrap">
-                <i class="fas fa-lock"></i>
-                <input type="password" name="password_confirmation" placeholder="Repeat password" required>
-            </div>
+        <div class="field">
+            <label for="password_confirmation">Confirm password <span style="color:#dc2626;">*</span></label>
+            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Repeat your password" required>
         </div>
 
-        {{-- Privacy Consent --}}
-        <div class="sf-group">
-            <div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:11px;padding:14px 16px;">
-                <div style="display:flex;align-items:flex-start;gap:10px;">
+        {{-- Privacy consent --}}
+        <div class="field full" style="margin-top:4px;">
+            <div style="background:var(--sky);border:1px solid var(--gold);border-radius:12px;padding:14px 16px;">
+                <label class="check-label">
                     <input type="checkbox" id="privacy_consent" name="privacy_consent" value="1"
-                           {{ old('privacy_consent') ? 'checked' : '' }} required
-                           style="width:17px;height:17px;margin-top:2px;accent-color:#0a1931;flex-shrink:0;">
-                    <label for="privacy_consent" style="font-size:.8rem;color:#374151;line-height:1.6;cursor:pointer;margin:0;">
-                        I have read and agree to the
+                           {{ old('privacy_consent') ? 'checked' : '' }} required>
+                    <span>I have read and agree to the
                         <button type="button" onclick="openPrivacyModal()"
-                                style="background:none;border:none;padding:0;color:#0a1931;font-weight:700;
-                                       font-size:.8rem;text-decoration:underline;cursor:pointer;">
+                                style="background:none;border:none;padding:0;color:var(--navy);font-weight:700;font-size:inherit;text-decoration:underline;cursor:pointer;">
                             Privacy Notice
                         </button>.
-                        I consent to the collection of my data by the Guidance Services Office in accordance with
-                        <strong>RA 10173</strong>. Data is retained for <strong>5 years</strong>.
-                        <span style="color:#ef4444;">*</span>
-                    </label>
-                </div>
+                        I consent to my data being processed in accordance with <strong>RA 10173</strong>.
+                        Data is retained for <strong>5 years</strong>. <span style="color:#dc2626;">*</span>
+                    </span>
+                </label>
                 @error('privacy_consent')
-                    <div style="margin-top:8px;padding:7px 12px;background:#fef2f2;border:1px solid #fecaca;
-                                border-radius:7px;color:#dc2626;font-size:.78rem;font-weight:600;">
-                        <i class="fas fa-triangle-exclamation me-1"></i>{{ $message }}
-                    </div>
+                    <div class="field-error" style="margin-top:6px;">{{ $message }}</div>
                 @enderror
             </div>
         </div>
 
-        <div style="background:#fef9e7;border:1px solid rgba(201,162,39,.3);border-radius:9px;
-                    padding:11px 14px;margin-bottom:18px;font-size:.78rem;color:#92400e;">
-            <i class="fas fa-info-circle me-1"></i>
-            Your program and year level are saved to your account — you won't need to re-enter them when submitting e-Hayag posts.
-        </div>
+    </div>
 
-        <button type="submit" class="btn-student-submit" id="submit-btn"
+    <div class="form-actions" style="margin-top:22px;border-top:1px solid var(--sky);padding-top:20px;">
+        <a href="{{ route('home') }}" class="btn btn-secondary">Back</a>
+        <button type="submit" id="submit-btn" class="btn btn-primary"
                 {{ old('privacy_consent') ? '' : 'disabled' }}
                 style="{{ old('privacy_consent') ? '' : 'opacity:.5;cursor:not-allowed;' }}">
-            <i class="fas fa-check me-2"></i> Create Account
+            Create account <span>↗</span>
         </button>
-    </form>
-
-    <div style="text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid #f3f4f6;">
-        <a href="{{ route('home') }}" style="font-size:.78rem;color:#9ca3af;text-decoration:none;">
-            <i class="fas fa-arrow-left me-1"></i> Back to Home
-        </a>
-        &nbsp;·&nbsp;
-        <a href="{{ route('student.reactivate.request') }}" style="font-size:.78rem;color:#9ca3af;text-decoration:none;">
-            Reactivate account
-        </a>
     </div>
-</div>
+
+    <p style="text-align:center;color:var(--muted);font-size:.78rem;margin-top:14px;">
+        Already registered?
+        <a href="{{ route('student.reactivate.request') }}" style="color:var(--navy);font-weight:700;text-decoration:underline;">Reactivate your account</a>
+    </p>
+</form>
 
 {{-- Privacy Notice Modal --}}
 @include('auth.privacy-notice')
@@ -182,19 +135,17 @@
 <script>
 const regShs = ['GRADE-11','GRADE-12'];
 const regShsOptions = [
-    {value:'BUEN - Business and Entrepreneurship', label:'BUEN - Business and Entrepreneurship'},
-    {value:'STEM - Science, Technology, Engineering, and Mathematics', label:'STEM - Science, Technology, Engineering, and Mathematics'},
-    {value:'ASSH - Arts, Social Sciences, and Humanities', label:'ASSH - Arts, Social Sciences, and Humanities'},
+    {value:'BUEN - Business and Entrepreneurship',label:'BUEN - Business and Entrepreneurship'},
+    {value:'STEM - Science, Technology, Engineering, and Mathematics',label:'STEM - Science, Technology, Engineering, and Mathematics'},
+    {value:'ASSH - Arts, Social Sciences, and Humanities',label:'ASSH - Arts, Social Sciences, and Humanities'},
 ];
 const regCollegeOptions = [
-    {value:'1st Year',label:'1st Year'},
-    {value:'2nd Year',label:'2nd Year'},
-    {value:'3rd Year',label:'3rd Year'},
-    {value:'4th Year',label:'4th Year'},
+    {value:'1st Year',label:'1st Year'},{value:'2nd Year',label:'2nd Year'},
+    {value:'3rd Year',label:'3rd Year'},{value:'4th Year',label:'4th Year'},
 ];
-const serverOldProgram   = '{{ old('program') }}';
-const serverOldYearLevel = '{{ old('year_level') }}';
-const LS_KEY = 'reg_draft';
+const serverOldProgram = '{{ old('program') }}';
+const serverOldYear    = '{{ old('year_level') }}';
+const LS_KEY = 'reg_draft_pj';
 
 function saveDraft(){
     localStorage.setItem(LS_KEY, JSON.stringify({
@@ -206,57 +157,54 @@ function saveDraft(){
 }
 function clearDraft(){ localStorage.removeItem(LS_KEY); }
 
-function updateRegYearLevel(program, restoreYearLevel){
-    const select  = document.getElementById('reg-year-level');
-    const options = regShs.includes(program) ? regShsOptions : (program ? regCollegeOptions : []);
-    select.innerHTML = '<option value="">Select year level</option>';
-    options.forEach(function(opt){
+function updateRegYearLevel(program, restoreYear){
+    const sel = document.getElementById('reg-year-level');
+    const opts = regShs.includes(program) ? regShsOptions : (program ? regCollegeOptions : []);
+    sel.innerHTML = '<option value="">Select year level</option>';
+    opts.forEach(function(o){
         const el = document.createElement('option');
-        el.value = opt.value; el.textContent = opt.label;
-        if(restoreYearLevel && opt.value === restoreYearLevel) el.selected = true;
-        select.appendChild(el);
+        el.value = o.value; el.textContent = o.label;
+        if(restoreYear && o.value === restoreYear) el.selected = true;
+        sel.appendChild(el);
     });
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-    const nameInput  = document.querySelector('[name="name"]');
-    const emailInput = document.querySelector('[name="email"]');
-    const progSelect = document.getElementById('reg-program');
-    const yearSelect = document.getElementById('reg-year-level');
-    const consentBox = document.getElementById('privacy_consent');
-    const submitBtn  = document.getElementById('submit-btn');
+    const nameI = document.querySelector('[name="name"]');
+    const emailI = document.querySelector('[name="email"]');
+    const prog = document.getElementById('reg-program');
+    const cb   = document.getElementById('privacy_consent');
+    const btn  = document.getElementById('submit-btn');
 
-    let restoreProgram = serverOldProgram || '';
-    let restoreYear    = serverOldYearLevel || '';
+    let rp = serverOldProgram || '';
+    let ry = serverOldYear    || '';
 
-    const draft = localStorage.getItem(LS_KEY);
-    if(draft){
-        try{
-            const d = JSON.parse(draft);
-            if(!restoreProgram && d.program)    restoreProgram = d.program;
-            if(!restoreYear    && d.year_level) restoreYear    = d.year_level;
-            if(!nameInput.value  && d.name)     nameInput.value  = d.name;
-            if(!emailInput.value && d.email)    emailInput.value = d.email;
-        }catch(e){}
-    }
+    const d = localStorage.getItem(LS_KEY);
+    if(d){ try{ const j=JSON.parse(d);
+        if(!rp&&j.program) rp=j.program;
+        if(!ry&&j.year_level) ry=j.year_level;
+        if(!nameI.value&&j.name)  nameI.value=j.name;
+        if(!emailI.value&&j.email) emailI.value=j.email;
+    }catch(e){} }
 
-    if(restoreProgram) progSelect.value = restoreProgram;
-    if(progSelect.value) updateRegYearLevel(progSelect.value, restoreYear);
+    if(rp) prog.value = rp;
+    if(prog.value) updateRegYearLevel(prog.value, ry);
 
-    nameInput.addEventListener('input', saveDraft);
-    emailInput.addEventListener('input', saveDraft);
-    progSelect.addEventListener('change', function(){ updateRegYearLevel(this.value,''); saveDraft(); });
-    yearSelect.addEventListener('change', saveDraft);
+    nameI.addEventListener('input', saveDraft);
+    emailI.addEventListener('input', saveDraft);
+    prog.addEventListener('change', function(){ updateRegYearLevel(this.value,''); saveDraft(); });
+    document.getElementById('reg-year-level').addEventListener('change', saveDraft);
 
     function syncBtn(){
-        submitBtn.disabled    = !consentBox.checked;
-        submitBtn.style.opacity = consentBox.checked ? '1' : '.5';
-        submitBtn.style.cursor  = consentBox.checked ? 'pointer' : 'not-allowed';
+        btn.disabled          = !cb.checked;
+        btn.style.opacity     = cb.checked ? '1' : '.5';
+        btn.style.cursor      = cb.checked ? 'pointer' : 'not-allowed';
     }
-    consentBox.addEventListener('change', syncBtn);
+    cb.addEventListener('change', syncBtn);
     syncBtn();
 
     document.querySelector('form').addEventListener('submit', clearDraft);
 });
 </script>
+
 </x-student-guest-layout>

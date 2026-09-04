@@ -30,8 +30,35 @@ class AdminStudentController extends Controller
         }
 
         $students = $query->latest()->get();
-        $total    = \App\Models\User::where('roles', 'user')->count();
+        $total    = User::where('roles', 'user')->count();
         return view('admin.students.index', compact('students', 'total'));
+    }
+
+    public function edit(User $student)
+    {
+        return view('admin.students.edit', compact('student'));
+    }
+
+    public function update(Request $request, User $student)
+    {
+        $validated = $request->validate([
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|max:255|unique:users,email,' . $student->id,
+            'program'    => 'nullable|string|max:100',
+            'year_level' => 'nullable|string|max:100',
+            'is_active'  => 'nullable|boolean',
+        ]);
+
+        $student->update([
+            'name'       => $validated['name'],
+            'email'      => $validated['email'],
+            'program'    => $validated['program'] ?? null,
+            'year_level' => $validated['year_level'] ?? null,
+            'is_active'  => $request->boolean('is_active', $student->is_active),
+        ]);
+
+        return redirect()->route('admin.students.index')
+            ->with('success', $student->name . '\'s account has been updated.');
     }
 
     public function toggleActive(User $student)

@@ -4,134 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Student Portal') — Project Jeremiah 33:3</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>@yield('title', 'Student Portal') — Project Jeremiah</title>
+    @vite('resources/css/styles.css')
     <style>
-        * { box-sizing: border-box; }
-        body {
+        /* Guest layout — register/reactivate pages */
+        .guest-shell {
             min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #0a1931 0%, #1c2a4d 50%, #2a3f6b 100%);
+            background: var(--sky);
+            display: flex;
+            flex-direction: column;
+        }
+        /* Minimal topbar */
+        .guest-topbar {
+            background: var(--navy);
+            padding: 10px 0;
+            text-align: center;
+        }
+        .guest-topbar a {
+            font-family: "Space Grotesk", sans-serif;
+            font-weight: 700; color: var(--gold);
+            font-size: .95rem; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .guest-topbar .tm { /* brand mark */
+            width: 28px; height: 28px; border-radius: 9px 9px 9px 3px;
+            background: var(--gold); color: var(--navy);
+            display: inline-grid; place-items: center;
+            font-family: serif; font-size: 1rem;
+            box-shadow: 3px 3px 0 rgba(255,255,255,.3);
+        }
+        /* Content area */
+        .guest-content {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 40px 20px;
         }
-        .student-auth-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 36px 36px 28px;
+        .guest-card {
+            background: var(--white);
+            border: 1px solid var(--navy-2);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+            padding: clamp(28px, 5vw, 44px);
             width: 100%;
-            max-width: 480px;
-            box-shadow: 0 24px 64px rgba(0,0,0,.25);
+            max-width: 500px;
         }
-        .student-auth-header {
+        .guest-card-header {
             text-align: center;
             margin-bottom: 28px;
         }
-        .student-auth-header .brand-icon {
+        .guest-icon {
             width: 60px; height: 60px;
-            background: linear-gradient(135deg, #0a1931, #1c2a4d);
-            border-radius: 16px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 14px;
-            font-size: 1.4rem; color: #f0c419;
+            background: var(--gold);
+            border-radius: 18px 18px 18px 5px;
+            display: grid; place-items: center;
+            margin: 0 auto 16px;
+            color: var(--navy); font-size: 1.5rem;
+            box-shadow: 5px 5px 0 var(--navy-2);
         }
-        .student-auth-header h1 {
-            font-size: 1.4rem; font-weight: 800;
-            color: #0a1931; margin: 0 0 6px;
+        .guest-card-header h1 {
+            font-size: 1.5rem; margin-bottom: 5px;
         }
-        .student-auth-header p {
-            font-size: .85rem; color: #6b7280; margin: 0;
-        }
-        .sf-group { margin-bottom: 18px; }
-        .sf-group label {
-            display: block; font-size: .8rem; font-weight: 700;
-            color: #374151; margin-bottom: 6px;
-        }
-        .input-wrap {
-            position: relative;
-            display: flex; align-items: center;
-            border: 1.5px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 0 14px;
-            transition: border-color .2s;
-            background: #fff;
-        }
-        .input-wrap:focus-within { border-color: #0a1931; }
-        .input-wrap i {
-            color: #9ca3af; font-size: .85rem;
-            margin-right: 10px; flex-shrink: 0;
-        }
-        .input-wrap input,
-        .input-wrap select {
-            border: none; outline: none;
-            font-size: .92rem; color: #374151;
-            padding: 12px 0;
-            width: 100%; background: transparent;
-        }
-        .btn-student-submit {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #0a1931, #1c2a4d);
-            color: #f0c419;
-            border: none; border-radius: 10px;
-            font-size: .95rem; font-weight: 800;
-            cursor: pointer;
-            transition: opacity .2s, transform .2s;
-            letter-spacing: .3px;
-        }
-        .btn-student-submit:hover:not(:disabled) {
-            opacity: .88; transform: translateY(-1px);
-        }
-        .btn-student-submit:disabled {
-            opacity: .5; cursor: not-allowed;
-        }
-        .error-banner {
-            background: #fef2f2;
-            border: 1.5px solid #fecaca;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 18px;
-            font-size: .82rem;
-            color: #dc2626;
-            line-height: 1.6;
-        }
-        .status-banner {
-            background: #f0fdf4;
-            border: 1.5px solid #bbf7d0;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 18px;
-            font-size: .82rem;
-            color: #166534;
-            line-height: 1.6;
-        }
-        .text-danger { color: #dc2626; font-size: .75rem; margin-top: 4px; display: block; }
+        .guest-card-header p { color: var(--muted); font-size: .85rem; }
 
-        /* OTP input */
-        .otp-input-row {
-            display: flex; gap: 10px; justify-content: center; margin: 20px 0;
+        /* Error banner */
+        .guest-error {
+            background: #fef2f2; border: 1px solid #fecaca;
+            border-radius: 12px; padding: 12px 16px;
+            margin-bottom: 18px; font-size: .82rem; color: #dc2626;
         }
-        .otp-digit {
-            width: 52px; height: 60px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 1.5rem; font-weight: 800;
-            color: #0a1931;
-            transition: border-color .2s;
-            outline: none;
+        .guest-status {
+            background: #f0fdf4; border: 1px solid #bbf7d0;
+            border-radius: 12px; padding: 12px 16px;
+            margin-bottom: 18px; font-size: .82rem; color: #166534;
         }
-        .otp-digit:focus { border-color: #0a1931; }
 
-        .hidden { display: none !important; }
+        /* Select with icon padding */
+        .field select { padding: 11px 12px; }
     </style>
 </head>
 <body>
-    {{ $slot }}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div class="guest-shell">
+
+    {{-- Minimal top nav --}}
+    <div class="guest-topbar">
+        <a href="{{ route('home') }}">
+            <span class="tm">J</span>
+            Project Jeremiah 33:3
+        </a>
+    </div>
+
+    {{-- Card content --}}
+    <div class="guest-content">
+        <div class="guest-card">
+            {{ $slot }}
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

@@ -3,96 +3,115 @@
 
 @section('content')
 
-<div class="pub-hero fade-up">
-    <div class="hero-inner">
-        <h1>Guidance Services</h1>
-        <p>Empowering students through professional counseling, academic support, and personal development programs.</p>
+<div class="page-hero">
+    <div class="shell">
+        <div class="breadcrumbs">Project Jeremiah / Services</div>
+        <h1>Support for where you are.</h1>
+        <p>Every student's needs are different. Explore the kind of support that feels right for you today — with no judgment and no pressure.</p>
     </div>
 </div>
 
 {{-- Services --}}
-<div class="sec-title fade-up">Services Offered</div>
-<div class="sec-line"></div>
-<div class="row g-3 mb-5">
-    @forelse($services as $service)
-    <div class="col-lg-4 col-md-6 fade-up" style="animation-delay:{{ $loop->index * .07 }}s">
-        <a href="{{ route('user.services.details', $service->id) }}" class="svc-card">
-            <div class="svc-icon"><i class="fas fa-hands-holding-heart"></i></div>
-            <h4>{{ $service->name }}</h4>
-            <p>{{ Str::limit(strip_tags($service->description ?? ''), 120, '…') }}</p>
-        </a>
-    </div>
-    @empty
-    <div class="col-12">
-        <div style="text-align:center;padding:52px;background:#fff;border-radius:14px;
-                    border:1.5px solid var(--border);color:var(--muted);">
-            No services have been added yet.
+<div class="section">
+    <div class="shell">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">What we offer</p>
+                <h2>Services offered</h2>
+            </div>
+            <p>Professional and student-centered support, with a gentle first step for every concern.</p>
+        </div>
+
+        @php $icons = ['◌','✧','⌁','↗','!','♧','♡','⌖']; @endphp
+
+        <div class="services-list">
+            @forelse($services as $i => $service)
+            <a href="{{ route('user.services.details', $service->id) }}"
+               class="card service-card card-hover" style="text-decoration:none;color:inherit;">
+                <div class="icon-box {{ $i % 2 === 1 ? 'icon-box-alt' : '' }}">
+                    {{ $icons[$i % count($icons)] }}
+                </div>
+                <h3>{{ $service->name }}</h3>
+                <p>{{ Str::limit(strip_tags($service->description ?? ''), 110, '…') }}</p>
+                <span class="text-link">Learn more →</span>
+            </a>
+            @empty
+            <div class="card" style="grid-column:1/-1;padding:48px;text-align:center;color:var(--muted);">
+                No services have been added yet.
+            </div>
+            @endforelse
         </div>
     </div>
-    @endforelse
 </div>
 
 {{-- Counselors --}}
 @if(isset($counselors) && $counselors->count())
-<div class="sec-title fade-up">Meet Our Counselors</div>
-<div class="sec-line"></div>
-<div class="row g-3 mb-5">
-    @foreach($counselors as $counselor)
-    <div class="col-lg-4 col-md-6 fade-up" style="animation-delay:{{ $loop->index * .08 }}s">
-        <a href="{{ route('user.counselors.details', $counselor->id) }}"
-           style="text-decoration:none;display:block;height:100%;">
-            <div class="cns-card">
-                @if($counselor->image)
-                    <img src="{{ asset('storage/' . $counselor->image) }}"
-                         alt="{{ $counselor->name }}" class="cns-avatar">
-                @else
-                    <div class="cns-avatar" style="background:linear-gradient(135deg,var(--navy),var(--navy2));
-                                                    display:flex;align-items:center;justify-content:center;
-                                                    color:var(--gold);font-size:2.2rem;">
-                        {{ strtoupper(substr($counselor->name, 0, 1)) }}
-                    </div>
-                @endif
-                <h5>{{ $counselor->name }}</h5>
-                <div class="cns-pos">{{ $counselor->position }}</div>
-                <div class="cns-dept">{{ $counselor->college }}</div>
-                <span style="display:inline-flex;align-items:center;gap:5px;
-                             padding:4px 12px;background:#fef9e7;color:#92400e;
-                             border:1px solid rgba(201,162,39,.3);border-radius:999px;
-                             font-size:.72rem;font-weight:700;">
-                    <i class="fas fa-graduation-cap"></i> Guidance Counselor
-                </span>
+<div class="section section-alt">
+    <div class="shell">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">People who listen</p>
+                <h2>Meet our counselors</h2>
             </div>
-        </a>
+            <p>Our guidance counselors are here to support your academic, personal, and mental wellness journey.</p>
+        </div>
+
+        <div class="counselor-grid-pub">
+            @foreach($counselors as $counselor)
+            <a href="{{ route('user.counselors.details', $counselor->id) }}"
+               class="card counselor-pub card-hover" style="text-decoration:none;color:inherit;display:block;">
+                <div class="counselor-pub-top">
+                    @if($counselor->image)
+                        <img src="{{ asset('storage/'.$counselor->image) }}"
+                             alt="{{ $counselor->name }}"
+                             class="counselor-pub-avatar"
+                             style="width:98px;height:98px;object-fit:cover;border-radius:50%;border:5px solid white;z-index:1;position:relative;">
+                    @else
+                        <div class="counselor-pub-avatar">
+                            {{ strtoupper(substr($counselor->name, 0, 2)) }}
+                        </div>
+                    @endif
+                </div>
+                <div class="counselor-pub-info">
+                    <div class="counselor-role">{{ $counselor->position ?? 'Guidance Counselor' }}</div>
+                    <h3>{{ $counselor->name }}</h3>
+                    @if($counselor->college)
+                    <p>{{ $counselor->college }}</p>
+                    @endif
+                    <span class="text-link">Consult {{ explode(' ', $counselor->name)[0] }} →</span>
+                </div>
+            </a>
+            @endforeach
+        </div>
     </div>
-    @endforeach
 </div>
 @endif
 
 {{-- Consultations --}}
 @if(isset($consultations) && $consultations->count())
-<div class="sec-title fade-up">Consultation Links</div>
-<div class="sec-line"></div>
-<div class="row g-3 mb-3">
-    @foreach($consultations as $consultation)
-    <div class="col-md-6 fade-up" style="animation-delay:{{ $loop->index * .08 }}s">
-        <div style="background:#fff;border-radius:14px;border:1.5px solid var(--border);
-                    padding:28px 24px;text-align:center;box-shadow:var(--shadow);height:100%;">
-            <div style="width:52px;height:52px;border-radius:50%;
-                        background:linear-gradient(135deg,var(--navy),var(--navy2));
-                        display:flex;align-items:center;justify-content:center;
-                        margin:0 auto 16px;color:var(--gold);font-size:1.2rem;">
-                <i class="fas fa-calendar-check"></i>
+<div class="section">
+    <div class="shell">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Choose your channel</p>
+                <h2>Consultation links</h2>
             </div>
-            <h5 style="font-weight:700;color:var(--navy);margin-bottom:8px;">{{ $consultation->name }}</h5>
-            @if($consultation->description)
-                <p style="font-size:.85rem;color:var(--muted);margin-bottom:18px;">{{ $consultation->description }}</p>
-            @endif
-            <a href="{{ $consultation->request_link }}" target="_blank" class="opt-btn" style="font-size:.85rem;">
-                <i class="fas fa-external-link-alt"></i> Request Consultation
+        </div>
+        <div class="consult-grid-pub">
+            @php $cIcons = ['◷','⌁','⌂','⌖','→']; @endphp
+            @foreach($consultations as $i => $c)
+            <a href="{{ $c->request_link }}" target="_blank"
+               class="card consult-pub card-hover" style="text-decoration:none;color:inherit;">
+                <div class="icon-box">{{ $cIcons[$i % count($cIcons)] }}</div>
+                <strong>{{ $c->name }}</strong>
+                @if($c->description)
+                    <p style="font-size:.75rem;color:var(--muted);margin-top:6px;">{{ Str::limit($c->description,60) }}</p>
+                @endif
+                <small>Open link →</small>
             </a>
+            @endforeach
         </div>
     </div>
-    @endforeach
 </div>
 @endif
 

@@ -157,6 +157,8 @@ Route::namespace('Admin')->prefix('admin')->middleware(['auth', 'verified', 'can
 
     /* STUDENT ACCOUNTS */
     Route::get('students', [AdminStudentController::class, 'index'])->name('admin.students.index');
+    Route::get('students/{student}/edit', [AdminStudentController::class, 'edit'])->name('admin.students.edit');
+    Route::put('students/{student}', [AdminStudentController::class, 'update'])->name('admin.students.update');
     Route::post('students/{student}/toggle-active', [AdminStudentController::class, 'toggleActive'])->name('admin.students.toggle_active');
     Route::delete('students/{student}', [AdminStudentController::class, 'destroy'])->name('admin.students.destroy');
 

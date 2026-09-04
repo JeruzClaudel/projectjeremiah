@@ -233,5 +233,94 @@ document.getElementById('confirm-modal').addEventListener('click', function(e) {
     if (e.target === this) this.style.display = 'none';
 });
 </script>
+{{-- ── Admin idle session timeout (30 min) ── --}}
+@auth
+<div id="idle-warning"
+     style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+            z-index:9998;background:#0a1931;color:#fff;border-radius:13px;
+            padding:16px 24px;box-shadow:0 8px 32px rgba(0,0,0,.3);
+            border:1.5px solid rgba(240,196,25,.4);min-width:320px;text-align:center;">
+    <div style="font-size:.85rem;font-weight:700;color:#f0c419;margin-bottom:4px;">
+        <i class="fas fa-clock me-1"></i> Session Expiring Soon
+    </div>
+    <div style="font-size:.8rem;color:rgba(255,255,255,.75);margin-bottom:12px;">
+        You will be logged out in <strong id="idle-countdown" style="color:#f0c419;">5:00</strong> due to inactivity.
+    </div>
+    <button onclick="resetIdleTimer()"
+            style="padding:7px 20px;background:var(--gold,#f0c419);color:#0a1931;
+                   border:none;border-radius:8px;font-size:.82rem;font-weight:800;cursor:pointer;">
+        Stay Logged In
+    </button>
+</div>
+
+<form id="idle-logout-form" method="POST" action="{{ route('logout') }}" style="display:none;">
+    @csrf
+</form>
+
+<script>
+(function () {
+    const IDLE_LIMIT    = 30 * 60;   // 30 minutes total (matches SESSION_LIFETIME)
+    const WARN_BEFORE   = 5  * 60;   // show warning 5 minutes before expiry
+    const WARN_AT       = IDLE_LIMIT - WARN_BEFORE;  // 25 minutes
+
+    let idleSeconds  = 0;
+    let warnInterval = null;
+    let warnLeft     = WARN_BEFORE;
+    const warning    = document.getElementById('idle-warning');
+    const countdown  = document.getElementById('idle-countdown');
+
+    function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = s % 60;
+        return m + ':' + String(sec).padStart(2, '0');
+    }
+
+    function startWarnCountdown() {
+        warnLeft = WARN_BEFORE;
+        warning.style.display = 'block';
+        clearInterval(warnInterval);
+        warnInterval = setInterval(function () {
+            warnLeft--;
+            if (countdown) countdown.textContent = formatTime(warnLeft);
+            if (warnLeft <= 0) {
+                clearInterval(warnInterval);
+                document.getElementById('idle-logout-form').submit();
+            }
+        }, 1000);
+    }
+
+    function resetIdleTimer() {
+        idleSeconds = 0;
+        warnLeft    = WARN_BEFORE;
+        clearInterval(warnInterval);
+        warning.style.display = 'none';
+        if (countdown) countdown.textContent = formatTime(WARN_BEFORE);
+        // Ping server to keep session alive
+        fetch('/up', { method: 'GET', credentials: 'same-origin' }).catch(() => {});
+    }
+
+    // Count idle seconds
+    setInterval(function () {
+        idleSeconds++;
+        if (idleSeconds === WARN_AT && warning.style.display !== 'block') {
+            startWarnCountdown();
+        }
+        if (idleSeconds >= IDLE_LIMIT) {
+            document.getElementById('idle-logout-form').submit();
+        }
+    }, 1000);
+
+    // Reset on any user activity
+    ['mousemove','keydown','mousedown','touchstart','scroll','click'].forEach(function (evt) {
+        document.addEventListener(evt, function () {
+            if (idleSeconds < WARN_AT) {
+                idleSeconds = 0;
+            }
+        }, { passive: true });
+    });
+})();
+</script>
+@endauth
+
 </body>
 </html>

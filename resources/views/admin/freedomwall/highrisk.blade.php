@@ -205,8 +205,20 @@
 
         {{-- Recipients --}}
         @if($alertRecipients->count() || $counselors->count())
-        <div style="font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;
-                     letter-spacing:.4px;margin-bottom:7px;">Recipients</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:7px;">
+            <div style="font-size:.68rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">
+                Recipients
+            </div>
+            <button type="button" onclick="saveRecipientSelection()"
+                    id="btn-save-recipients"
+                    style="display:inline-flex;align-items:center;gap:5px;
+                           padding:4px 12px;border-radius:7px;
+                           background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;
+                           font-size:.72rem;font-weight:700;cursor:pointer;transition:all .18s;"
+                    title="Save current selection so it persists after refresh">
+                <i class="fas fa-floppy-disk"></i> Save Selection
+            </button>
+        </div>
         <div class="mini-chips" id="mini-recipient-list">
             @foreach($alertRecipients as $email)
             <label class="mini-chip selected">
@@ -225,6 +237,9 @@
                 @endif
             @endforeach
         </div>
+        <div id="save-recipients-result"
+             style="display:none;font-size:.72rem;font-weight:600;
+                    padding:6px 12px;border-radius:7px;margin-bottom:8px;"></div>
         @else
         <div style="padding:10px 14px;background:var(--light);border:1px solid var(--border);
                     border-radius:8px;margin-bottom:14px;font-size:.8rem;color:var(--muted);">
@@ -439,6 +454,65 @@ function showR(type, msg) {
     el.textContent   = msg;
     el.className     = 'send-result ' + (type === 'ok' ? 'ok' : 'err');
     el.style.display = 'block';
+}
+
+// ── Save recipient selection to system_settings ───────────────
+async function saveRecipientSelection() {
+    const btn    = document.getElementById('btn-save-recipients');
+    const result = document.getElementById('save-recipients-result');
+
+    const selected = Array.from(
+        document.querySelectorAll('#mini-recipient-list input[type="checkbox"]:checked')
+    ).map(cb => cb.value).filter(Boolean);
+
+    if (!selected.length) {
+        result.textContent    = '⚠ Select at least one recipient first.';
+        result.style.cssText  = 'display:block;background:#fef9e7;border:1px solid rgba(201,162,39,.3);color:#92400e;font-size:.72rem;font-weight:600;padding:6px 12px;border-radius:7px;margin-bottom:8px;';
+        setTimeout(() => result.style.display = 'none', 3000);
+        return;
+    }
+
+    const orig = btn.innerHTML;
+    btn.innerHTML   = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+    btn.disabled    = true;
+    result.style.display = 'none';
+
+    try {
+        const res  = await fetch('{{ route('admin.settings.alert_recipients') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ alert_recipients: selected.join(',') }),
+        });
+
+        if (res.ok || res.redirected) {
+            btn.innerHTML         = '<i class="fas fa-check"></i> Saved!';
+            btn.style.background  = '#0a1931';
+            btn.style.color       = '#f0c419';
+            btn.style.borderColor = '#0a1931';
+            result.textContent    = '✅ Recipients saved — selection will persist after refresh.';
+            result.style.cssText  = 'display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;font-size:.72rem;font-weight:600;padding:6px 12px;border-radius:7px;margin-bottom:8px;';
+            setTimeout(() => {
+                btn.innerHTML         = orig;
+                btn.style.background  = '';
+                btn.style.color       = '';
+                btn.style.borderColor = '';
+                result.style.display  = 'none';
+            }, 3000);
+        } else {
+            throw new Error('Save failed');
+        }
+    } catch(e) {
+        result.textContent   = '❌ Could not save. Please try again.';
+        result.style.cssText = 'display:block;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;font-size:.72rem;font-weight:600;padding:6px 12px;border-radius:7px;margin-bottom:8px;';
+        btn.innerHTML        = orig;
+        setTimeout(() => result.style.display = 'none', 3000);
+    } finally {
+        btn.disabled = false;
+    }
 }
 </script>
 

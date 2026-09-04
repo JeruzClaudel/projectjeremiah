@@ -1,63 +1,65 @@
 @extends('layouts.user')
-@section('title', 'e-Hayag — Share Your Thoughts')
+@section('title', 'e-Hayag — Project Jeremiah')
 
 @section('content')
 
-<div class="pub-hero fade-up">
-    <div class="hero-inner">
-        <div style="display:inline-flex;align-items:center;gap:8px;
-                    padding:5px 16px;border:1px solid rgba(240,196,25,.35);
-                    border-radius:999px;background:rgba(240,196,25,.1);
-                    color:var(--gold);font-size:.78rem;font-weight:700;
-                    text-transform:uppercase;letter-spacing:.5px;margin-bottom:18px;">
-            <i class="fas fa-lock"></i> Private &amp; Confidential
-        </div>
+<div class="shell hayag-layout">
+    <div class="hayag-copy">
+        <p class="eyebrow">A safe channel to speak up</p>
         <h1>e-Hayag</h1>
-        <p>
-            Welcome to your safe space. Share your thoughts, feelings, and experiences
-            without fear of judgment. Everything you write is seen only by your guidance counselors
-            who are here to support you.
-        </p>
-        <div style="margin-top:24px;">
-            <a href="{{ route('user.freedomwall.create') }}"
-               style="display:inline-flex;align-items:center;gap:8px;
-                      padding:13px 32px;background:var(--gold);color:var(--navy);
-                      border-radius:999px;font-size:.95rem;font-weight:800;
-                      text-decoration:none;transition:opacity .2s,transform .2s;"
-               onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='.9'"
-               onmouseout="this.style.transform='';this.style.opacity='1'">
-                <i class="fas fa-pen"></i> Start Writing
-            </a>
+        <p>Your voice matters. Your concerns deserve to be heard. e-Hayag is a private, non-judgmental way to let the guidance office know what you are experiencing.</p>
+        <div class="actions">
+            <a class="btn btn-primary" href="{{ route('user.freedomwall.create') }}">Start Writing <span>↗</span></a>
+            <a class="btn btn-secondary" href="{{ route('user.hotline') }}">Need immediate help?</a>
         </div>
+    </div>
+
+    <div class="safe-card">
+        <div class="icon-box" style="margin-bottom:16px;">✎</div>
+        <h3>You can share at your own pace.</h3>
+        <p>You do not have to have the right words. Tell us what you can, and an authorized guidance person can help you find a next step.</p>
+        <ul class="safe-list">
+            <li>Designed with privacy in mind</li>
+            <li>Write openly, without judgment</li>
+            <li>Seen only by guidance counselors</li>
+            <li>Requires your registered student email</li>
+        </ul>
     </div>
 </div>
 
-{{-- How to use --}}
-<div class="row g-3 mb-4">
-    @foreach([
-        ['fas fa-heart',         '#dc2626', '#fff0f0', 'Be Honest',    'Share what you truly feel. No filters, no judgment — this is your honest space.'],
-        ['fas fa-shield-halved', '#0a1931', '#f0f9ff', 'Stay Safe',    'Your post is read only by guidance counselors. Your privacy is always protected.'],
-        ['fas fa-comment-dots',  '#16a34a', '#f0fdf4', 'You Are Heard','Every submission is read with care. You are never alone on this journey.'],
-    ] as [$icon, $color, $bg, $title, $desc])
-    <div class="col-md-4 fade-up" style="animation-delay:{{ $loop->index * .1 }}s">
-        <div style="background:#fff;border-radius:14px;border:1.5px solid var(--border);
-                    padding:22px 20px;height:100%;box-shadow:var(--shadow);">
-            <div style="width:46px;height:46px;border-radius:12px;background:{{ $bg }};
-                        display:flex;align-items:center;justify-content:center;
-                        color:{{ $color }};font-size:1.1rem;margin-bottom:12px;">
-                <i class="{{ $icon }}"></i>
+<div class="section section-alt">
+    <div class="shell">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Before you begin</p>
+                <h2>A few things to know</h2>
             </div>
-            <div style="font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:6px;">{{ $title }}</div>
-            <div style="font-size:.84rem;color:var(--muted);line-height:1.6;">{{ $desc }}</div>
+        </div>
+        <div class="hayag-info-grid">
+            <div class="card hayag-info-card card-hover">
+                <div class="icon-box">♡</div>
+                <h3>You are welcome here</h3>
+                <p>Concerns about school, home, relationships, or how you feel are all valid reasons to reach out.</p>
+            </div>
+            <div class="card hayag-info-card card-hover">
+                <div class="icon-box icon-box-alt">⌁</div>
+                <h3>Share only what feels safe</h3>
+                <p>Give enough context for support, but never include passwords or information you do not want to share.</p>
+            </div>
+            <div class="card hayag-info-card card-hover">
+                <div class="icon-box">!</div>
+                <h3>Not for emergencies</h3>
+                <p>For immediate danger or urgent crisis support, please use the Hotlines page or local emergency services.</p>
+                <a class="text-link" href="{{ route('user.hotline') }}">View hotlines →</a>
+            </div>
+            <div class="card hayag-info-card card-hover">
+                <div class="icon-box">→</div>
+                <h3>Ready when you are</h3>
+                <p>Start with a few lines. The guidance office can help from there. Register first if you haven't yet.</p>
+                <a class="text-link" href="{{ route('user.freedomwall.create') }}">Start writing →</a>
+            </div>
         </div>
     </div>
-    @endforeach
-</div>
-
-<div class="info-box fade-up" style="text-align:center;">
-    <i class="fas fa-quote-left me-2"></i>
-    Take a moment. Breathe. Write.<br>
-    Here, you are heard. You are valued. You are not alone.
 </div>
 
 @endsection

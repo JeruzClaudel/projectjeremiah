@@ -1,64 +1,48 @@
 <x-student-guest-layout>
-@section('title', 'Reactivate Account')
+@section('title', 'Reactivate Account — Project Jeremiah')
 
-<div class="student-auth-card">
-
-    <div class="student-auth-header">
-        <div class="brand-icon"><i class="fas fa-rotate-right"></i></div>
-        <h1>Reactivate Account</h1>
-        <p>Enter your registered email to receive a reactivation code</p>
-    </div>
-
-    @if($errors->any())
-        <div class="error-banner">
-            @foreach($errors->all() as $error)
-                <div><i class="fas fa-circle-exclamation me-1"></i>{{ $error }}</div>
-            @endforeach
-        </div>
-    @endif
-
-    @if(session('status'))
-        <div class="status-banner">
-            <i class="fas fa-circle-check me-1"></i>{{ session('status') }}
-        </div>
-    @endif
-
-    <form method="POST" action="{{ route('student.reactivate.send') }}">
-        @csrf
-
-        <div class="sf-group">
-            <label>Registered Email Address <span style="color:#ef4444;">*</span></label>
-            <div class="input-wrap">
-                <i class="fas fa-envelope"></i>
-                <input type="email" name="email" value="{{ old('email') }}"
-                       placeholder="yourname@students.nu-laguna.edu.ph" required autofocus>
-            </div>
-            <small style="font-size:.72rem;color:#9ca3af;">
-                Use your NU Laguna student email
-                (<strong>@students.nu-laguna.edu.ph</strong> or <strong>@shs.nu-laguna.edu.ph</strong>)
-            </small>
-            </div>
-        </div>
-
-        <div style="background:#fef9e7;border:1px solid rgba(201,162,39,.3);border-radius:9px;
-                    padding:11px 14px;margin-bottom:18px;font-size:.78rem;color:#92400e;">
-            <i class="fas fa-info-circle me-1"></i>
-            A 6-digit code will be sent to your email. Enter it on the next page to reactivate your account.
-        </div>
-
-        <button type="submit" class="btn-student-submit">
-            <i class="fas fa-paper-plane me-2"></i> Send Reactivation Code
-        </button>
-    </form>
-
-    <div style="text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid #f3f4f6;">
-        <a href="{{ route('home') }}" style="font-size:.78rem;color:#9ca3af;text-decoration:none;">
-            <i class="fas fa-arrow-left me-1"></i> Back to Home
-        </a>
-        &nbsp;·&nbsp;
-        <a href="{{ route('student.register') }}" style="font-size:.78rem;color:#9ca3af;text-decoration:none;">
-            Register new account
-        </a>
-    </div>
+<div class="guest-card-header">
+    <div class="guest-icon">↺</div>
+    <h1>Reactivate your account</h1>
+    <p>Enter your registered email to receive a reactivation code</p>
 </div>
+
+@if($errors->any())
+    <div class="guest-error">
+        @foreach($errors->all() as $error)<div>{{ $error }}</div>@endforeach
+    </div>
+@endif
+
+@if(session('status'))
+    <div class="guest-status">{{ session('status') }}</div>
+@endif
+
+<form method="POST" action="{{ route('student.reactivate.send') }}">
+    @csrf
+
+    <div class="field" style="margin-bottom:18px;">
+        <label for="email">Registered email address <span style="color:#dc2626;">*</span></label>
+        <input type="email" id="email" name="email" value="{{ old('email') }}"
+               placeholder="yourname@students.nu-laguna.edu.ph" required autofocus>
+        <span class="field-note">Only @students.nu-laguna.edu.ph and @shs.nu-laguna.edu.ph are accepted.</span>
+    </div>
+
+    <div style="background:var(--sky);border:1px solid var(--gold);border-radius:12px;
+                padding:13px 16px;margin-bottom:20px;font-size:.8rem;color:var(--navy);">
+        A 6-digit code will be sent to your email. Enter it on the next page to reactivate your account.
+    </div>
+
+    <div class="form-actions" style="border-top:1px solid var(--sky);padding-top:18px;">
+        <a href="{{ route('home') }}" class="btn btn-secondary btn-sm">Back to Home</a>
+        <button type="submit" class="btn btn-primary">
+            Send code <span>↗</span>
+        </button>
+    </div>
+
+    <p style="text-align:center;color:var(--muted);font-size:.78rem;margin-top:14px;">
+        Don't have an account?
+        <a href="{{ route('student.register') }}" style="color:var(--navy);font-weight:700;text-decoration:underline;">Register here</a>
+    </p>
+</form>
+
 </x-student-guest-layout>

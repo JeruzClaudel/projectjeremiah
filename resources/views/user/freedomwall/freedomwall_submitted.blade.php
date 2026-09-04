@@ -3,60 +3,56 @@
 
 @section('content')
 
-<div class="submitted-hero fade-up">
-    <div class="check-circle"><i class="fas fa-check"></i></div>
-    <h1>Your voice has been heard.</h1>
-    <p>
-        Thank you for sharing with us. What you wrote matters, and it will be read with care
-        by your guidance counselors. You are not alone, and reaching out is a courageous step.
-    </p>
-</div>
+<div class="section">
+    <div class="shell">
+        <div class="submitted-hero">
+            <div class="submitted-check">✓</div>
+            <h1>Your voice has been heard.</h1>
+            <p>Thank you for sharing with us. What you wrote matters, and it will be read with care by your guidance counselors. You are not alone, and reaching out is a courageous step.</p>
+        </div>
 
-{{-- What happens next --}}
-<div style="background:#fff;border-radius:14px;border:1.5px solid var(--border);
-            border-left:4px solid var(--gold);padding:22px 26px;margin-bottom:24px;
-            box-shadow:var(--shadow);" class="fade-up fade-up-d1">
-    <div style="font-weight:700;color:var(--navy);margin-bottom:8px;">
-        <i class="fas fa-info-circle" style="color:var(--gold);margin-right:7px;"></i>What happens next?
+        <div class="card" style="padding:24px 28px;border-left:4px solid var(--gold);margin-bottom:24px;max-width:700px;">
+            <h3 style="margin-bottom:8px;">What happens next?</h3>
+            <p style="color:var(--muted);font-size:.9rem;line-height:1.75;">
+                Your post is confidential and will only be seen by your guidance counselors. They read every submission with compassion and use them to better understand how to support students like you.
+            </p>
+        </div>
+
+        <div class="action-next-grid" style="max-width:700px;">
+            <a href="{{ route('user.services') }}" class="action-next-card">
+                <div class="action-next-icon" style="background:var(--gold-soft);color:var(--navy);">✦</div>
+                <div>
+                    <strong style="display:block;color:var(--navy);font-size:.9rem;">Explore Services</strong>
+                    <span style="font-size:.78rem;color:var(--muted);">Find counseling &amp; support programs</span>
+                </div>
+            </a>
+            <a href="{{ route('user.hotline') }}" class="action-next-card">
+                <div class="action-next-icon" style="background:var(--gold);color:var(--navy);">!</div>
+                <div>
+                    <strong style="display:block;color:var(--navy);font-size:.9rem;">Emergency Hotlines</strong>
+                    <span style="font-size:.78rem;color:var(--muted);">24/7 crisis support resources</span>
+                </div>
+            </a>
+            <a href="{{ route('user.freedomwall.add') }}" class="action-next-card">
+                <div class="action-next-icon" style="background:var(--sky);color:var(--navy);">✎</div>
+                <div>
+                    <strong style="display:block;color:var(--navy);font-size:.9rem;">Write Again</strong>
+                    <span style="font-size:.78rem;color:var(--muted);">Share another thought or feeling</span>
+                </div>
+            </a>
+            <a href="{{ route('home') }}" class="action-next-card">
+                <div class="action-next-icon" style="background:var(--sky-2);color:var(--navy);">⌂</div>
+                <div>
+                    <strong style="display:block;color:var(--navy);font-size:.9rem;">Go to Home</strong>
+                    <span style="font-size:.78rem;color:var(--muted);">Back to the main page</span>
+                </div>
+            </a>
+        </div>
+
+        <p style="text-align:center;font:italic .9rem Georgia,serif;color:var(--muted);margin-top:28px;">
+            "Every step forward is progress. Every conversation matters. You are not alone on this journey."
+        </p>
     </div>
-    <p style="font-size:.88rem;color:var(--muted);line-height:1.7;margin:0;">
-        Your post is confidential and will only be seen by your guidance counselors.
-        They read every submission with compassion and use them to better understand
-        how to support students like you. If you'd like a personal follow-up, a counselor may reach out.
-    </p>
-</div>
-
-{{-- Action grid --}}
-<div class="row g-3 mb-4 fade-up fade-up-d2">
-    @foreach([
-        [route('user.services'),         'fas fa-concierge-bell', '#16a34a', '#f0fdf4', 'Explore Services',    'Find counseling & support programs'],
-        [route('user.hotline'),           'fas fa-phone-alt',      '#dc2626', '#fff0f0', 'Emergency Hotlines',  '24/7 crisis support resources'],
-        [route('user.freedomwall.add'),   'fas fa-comment-dots',   '#1d4ed8', '#eef4ff', 'Write Again',         'Share another thought or feeling'],
-        [route('home'),                   'fas fa-house',          '#c9a227', '#fef9e7', 'Go to Home',          'Back to the main page'],
-    ] as [$href, $icon, $color, $bg, $label, $sub])
-    <div class="col-md-6">
-        <a href="{{ $href }}"
-           style="display:flex;align-items:center;gap:14px;background:#fff;
-                  border:1.5px solid var(--border);border-radius:13px;padding:16px 18px;
-                  text-decoration:none;color:inherit;transition:border-color .2s,transform .2s,box-shadow .2s;"
-           onmouseover="this.style.borderColor='var(--gold)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.1)'"
-           onmouseout="this.style.borderColor='var(--border)';this.style.transform='';this.style.boxShadow=''">
-            <div style="width:44px;height:44px;border-radius:50%;background:{{ $bg }};
-                        display:flex;align-items:center;justify-content:center;
-                        color:{{ $color }};font-size:1rem;flex-shrink:0;">
-                <i class="{{ $icon }}"></i>
-            </div>
-            <div>
-                <div style="font-weight:700;color:var(--navy);font-size:.92rem;">{{ $label }}</div>
-                <div style="font-size:.78rem;color:var(--muted);">{{ $sub }}</div>
-            </div>
-        </a>
-    </div>
-    @endforeach
-</div>
-
-<div style="text-align:center;color:var(--muted);font-style:italic;font-size:.88rem;padding:10px 0;" class="fade-up fade-up-d3">
-    "Every step forward is progress. Every conversation matters. You are not alone on this journey."
 </div>
 
 @endsection
@@ -68,53 +64,37 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const contactUrl = '{{ $highRiskUrl ?? route('user.services') }}';
-
     @if(isset($randomQuote) && $randomQuote)
-    const quoteHtml = '<p style="font-size:.95rem;font-style:italic;color:#111827;margin-bottom:4px;">"{{ addslashes($randomQuote->quote) }}"</p><p style="font-size:.8rem;color:#6b7280;margin-bottom:12px;">— {{ addslashes($randomQuote->author ?? '') }}</p><hr style="margin:10px 0;border-color:#e5e7eb;">';
+    const quoteHtml = '<p style="font-size:.95rem;font-style:italic;color:var(--navy);margin-bottom:5px;">"{{ addslashes($randomQuote->quote) }}"</p><p style="font-size:.8rem;color:var(--muted);margin-bottom:10px;">— {{ addslashes($randomQuote->author ?? '') }}</p><hr style="margin:10px 0;border-color:#e5e7eb;">';
     @else
     const quoteHtml = '';
     @endif
-
     Swal.fire({
-        html: '<div style="text-align:center;">'
-            + '<i class="fas fa-hands-holding-heart" style="font-size:2rem;color:#c9a227;display:block;margin-bottom:12px;"></i>'
-            + quoteHtml
-            + '<p style="font-size:.9rem;color:#374151;line-height:1.7;margin:0;">We hear you, and we care. A guidance counselor is here to support you. You don\'t have to face this alone.</p>'
-            + '</div>',
-        showConfirmButton: true,
-        confirmButtonText: '<i class="fas fa-comments"></i> Reach Out to a Counselor',
-        confirmButtonColor: '#0a1931',
+        html: '<div style="text-align:center;">' + quoteHtml + '<p style="font-size:.9rem;color:var(--ink,#000);line-height:1.7;">We hear you, and we care. A guidance counselor is here to support you.</p></div>',
+        confirmButtonText: 'Reach Out to a Counselor',
+        confirmButtonColor: '#31428A',
         showCancelButton: true,
         cancelButtonText: 'Maybe later',
-        cancelButtonColor: 'transparent',
-        didOpen: () => {
-            const c = Swal.getCancelButton();
-            if (c) {
-                c.style.cssText = 'font-size:.72rem!important;color:#9ca3af!important;background:transparent!important;border:none!important;text-decoration:underline!important;box-shadow:none!important;';
-            }
-        }
+        cancelButtonColor: '#888',
     }).then(r => { if (r.isConfirmed) window.open(contactUrl, '_blank'); });
 });
 </script>
-
 @elseif(isset($randomQuote) && $randomQuote)
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     Swal.fire({
-        html: '<p style="font-size:1rem;font-style:italic;color:#111827;">"{{ addslashes($randomQuote->quote) }}"</p>'
-            + '<p style="font-size:.85rem;color:#6b7280;margin-top:6px;">— {{ addslashes($randomQuote->author ?? 'Guidance Services Office') }}</p>',
+        html: '<p style="font-size:1rem;font-style:italic;color:#000;">"{{ addslashes($randomQuote->quote) }}"</p><p style="font-size:.85rem;color:#666;margin-top:6px;">— {{ addslashes($randomQuote->author ?? 'Guidance Services Office') }}</p>',
         icon: 'info',
-        showCancelButton: true,
-        confirmButtonText: '<i class="fas fa-comments me-1"></i> Talk to a Counselor',
+        confirmButtonText: 'Talk to a Counselor',
         cancelButtonText: 'Maybe later',
-        confirmButtonColor: '#0a1931',
-        cancelButtonColor: '#6c757d',
+        showCancelButton: true,
+        confirmButtonColor: '#31428A',
+        cancelButtonColor: '#888',
     }).then(r => { if (r.isConfirmed) window.location.href = '{{ route('user.services') }}'; });
 });
 </script>
 @endif
 
-{{-- Prevent back-button return --}}
 <script>
 if (window.history && window.history.replaceState) {
     window.history.replaceState(null, '', window.location.href);
